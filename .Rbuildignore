@@ -1,0 +1,11 @@
+^renv$
+^renv\.lock$
+^PPSTheme\.Rproj$
+^\.Rproj\.user$
+^LICENSE\.md$
+^README\.Rmd$
+^\.pre-commit-config\.yaml$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^data-raw$

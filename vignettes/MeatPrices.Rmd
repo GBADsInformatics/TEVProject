@@ -1,0 +1,395 @@
+---
+title: "FAOSTAT Meat Prices (GBADS)"
+author: "Gabriel Dennis (CSIRO)"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: yes
+    toc_depth: 2
+    toc_float: yes
+    code_folding: hide
+    theme: lumen
+    highlight: pygments
+    df_print: paged
+  html_notebook:
+    toc: yes
+    toc_depth: 2
+    toc_float: yes
+    code_folding: hide
+    theme: lumen
+    highlight: pygments
+    df_print: paged
+editor_options:
+  chunk_output_type: inline
+  markdown:
+    wrap: 72
+bibliography: ../references.bib
+csl: ../cambridge-university-press-numeric.csl
+link-citations: yes
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  error = FALSE
+)
+
+
+knitr::opts_knit$set(
+  root.dir = here::here(".")
+)
+
+suppressPackageStartupMessages({
+  library(tidyr)
+  library(dplyr)
+  library(stringr)
+  library(LivestockValueGBADS)
+})
+```
+
+```{r load-config}
+config <- config::get()
+```
+
+<!-- Outlines the the purpose of this analysis  -->
+
+# Summary
+
+## Goal
+
+<!-- The current stated end goal for this piece of analysis  -->
+
+The goal of this short report is to compare the data availability
+currently of the FAOSTAT "Meat" prices vs "Meat, Liveweight" prices and
+make a decision as to which approach should be taken for the Global
+Value of Livestock and Aquaculture Manuscript. The outcome from this
+analysis will be a decision on whether to change to "Meat" prices on a
+global level, rather than the "Meat" live weight prices which are
+currently being used.
+
+***Note: Currently it is not under consideration to use a combination of
+both sets of prices due to the added uncertainty in the estimate that
+this may produce***
+
+## Approach
+
+<!-- The approach taken in this analysis -->
+
+<!-- particularly any specific details  -->
+
+In particular, a greater amount of focus will be applied to the period
+$2014-16$ as this is currently used as a base period for many of the
+currency conversions.
+
+Initially this report will use the raw FAOSTAT [@FAO2021a] source data
+to compare the amounts of each dataset which is available.
+
+The metric that will be used to determine which approach will is most
+valid is the number of countries that only have prices available in one
+series rather than the other.
+
+In particular, results for the following Livestock Types will be focused
+on
+
+-   ***Cattle***
+-   ***Sheep***
+-   ***Goats***
+-   ***Chickens***
+-   ***Pigs***
+
+# Load Data
+
+Load the raw FAOSTAT Producer Prices dataset [@FAO2021a] directly from
+the raw files to compare.
+
+```{r import-prices}
+fao_prices <- arrow::read_parquet(
+  file = config$data$processed$tables$producer_prices
+)
+```
+
+Currently the items and series that are investigated are
+
+-   Items containing the string "Meat", this will narrow down the prices
+    to each of the "FAOSTAT" producer price series "Meat, <animal>" or
+    "Meat, live weight <animal>" which are the following FAOSTAT
+    Producer Prices[@FAO2021a] item codes
+
+## FAOSTAT Meat Item Codes
+
+```{r}
+fao_prices |>
+  distinct(item, item_code) |>
+  filter(grepl("meat", item, ignore.case = TRUE))
+```
+
+-   Months Code - 7021 - This is the price annual values. Here, the
+    annual values rather than the monthly values (which are available
+    since $2010$) due to the uncertainty that could be added by using
+    the monthly values. If FAOSTAT has decided that it is too uncertain
+    to extrapolate to an annual value, when the majority of the annual
+    prices are obviously calculated from monthly prices, then we don't
+    want to do also.
+
+## Table of Available 2014-2016 Live Weight and Meat Prices
+
+```{r}
+# Filter for all meat prices
+fao_prices <- fao_prices |>
+  filter(
+    grepl("meat", item, ignore.case = TRUE), # Filter for all the meat prices
+    year %in% 2014:2016, # Select for 2014-16 Price Base Year
+    months_code == 7021
+  )
+
+fao_prices |> # Filter For annual values
+  distinct(area, item, element) |>
+  count(item, element) |>
+  spread(element, n) |>
+  janitor::clean_names() |>
+  select(item, contains("lcu")) |>
+  mutate(
+    is_live = grepl("live weight", item),
+  ) |>
+  separate(item, c(NA, "item"), sep = ",\\s+") |>
+  pivot_wider(
+    names_from = "is_live",
+    names_prefix = "is_live_",
+    values_from = "producer_price_lcu_tonne"
+  )
+```
+
+This table shows the available prices.
+
+# Which Countries have a price available in only meat?
+
+*Note: this is only taking into account Cattle, Chicken, Pig, Sheep
+Horse and Duck*
+
+```{r}
+# Split the Prices into Live Weight and Not Live Weight
+only_meat <- fao_prices |>
+  filter(
+    str_detect(element, "LCU")
+  ) |>
+  mutate(
+    is_live = str_detect(item, "[L|l]ive")
+  ) |>
+  separate(
+    item, c(NA, "animal"),
+    sep = ","
+  ) |>
+  select(area, animal, is_live) |>
+  distinct() |>
+  group_by(area) |>
+  count(animal, is_live) |>
+  pivot_wider(names_from = is_live, values_from = n) |>
+  rename(
+    has_live = `TRUE`,
+    has_meat = `FALSE`
+  ) |>
+  ungroup() |>
+  filter(is.na(has_live)) |>
+  mutate(animal = trimws(animal))
+
+only_meat_df <- only_meat |>
+  spread(animal, has_meat) |>
+  select(area, cattle, chicken, pig, sheep, horse, duck, goat) %>%
+  filter(rowSums(is.na(.)) != ncol(.) - 1)
+
+only_meat_df
+```
+
+There are `r english::english(nrow(only_meat_df))` countries which have
+only *Meat* prices for these animals (Cattle, Chicken, Pig, Sheep,
+Horse, Duck).
+
+And per animal these are
+
+## Missing Prices {.tabset}
+
+### Cattle
+
+```{r}
+filter(only_meat_df, cattle == 1) |>
+  select(area)
+```
+
+There are `r sum(only_meat_df$cattle == 1, na.rm = TRUE)` with only Meat
+Prices for Cattle. The most noticeable countries here are France, Spain
+and Algeria.
+
+### Sheep
+
+```{r}
+filter(only_meat_df, sheep == 1) |>
+  select(area)
+```
+
+There are `r sum(only_meat_df$sheep == 1, na.rm = TRUE)` with only Meat
+Prices for Sheep. The most noticable countries here potentially being
+France and Algeria.
+
+### Chicken
+
+```{r}
+filter(only_meat_df, chicken == 1) |>
+  select(area)
+```
+
+There are `r sum(only_meat_df$chicken == 1, na.rm = TRUE)` with only
+Meat Prices for Chickens. The most noticeable countries here being
+
+-   France
+-   Egypt
+-   Algeria
+-   Kenya
+-   South Africa
+-   Vietnam
+
+### Goat
+
+```{r}
+filter(only_meat_df, goat == 1) |>
+  select(area)
+```
+
+There are `r sum(only_meat_df$goat == 1, na.rm = TRUE)` with only Meat
+Prices for Goats.
+
+The most noticeable countries here being
+
+-   South Africa
+-   Vietnam
+
+### Pig
+
+```{r}
+filter(only_meat_df, pig == 1) |>
+  select(area)
+```
+
+There are `r sum(only_meat_df$goat == 1, na.rm = TRUE)` with only Meat
+Prices for Pigs.
+
+# Which Countries have a price available in only Live Weights?
+
+*Note: this is only taking into account Cattle, Chicken, Pig, Sheep
+Horse and Duck*
+
+```{r}
+# Split the Prices into Live Weight and Not Live Weight
+only_live <- fao_prices |>
+  filter(
+    str_detect(element, "LCU")
+  ) |>
+  mutate(
+    is_live = str_detect(item, "[L|l]ive")
+  ) |>
+  separate(
+    item, c(NA, "animal"),
+    sep = ","
+  ) |>
+  select(area, animal, is_live) |>
+  distinct() |>
+  group_by(area) |>
+  count(animal, is_live) |>
+  pivot_wider(names_from = is_live, values_from = n) |>
+  rename(
+    has_live = `TRUE`,
+    has_meat = `FALSE`
+  ) |>
+  ungroup() |>
+  filter(is.na(has_meat)) |>
+  mutate(animal = trimws(animal))
+
+only_live_df <- only_live |>
+  spread(animal, has_live) |>
+  select(area, cattle, chicken, pig, sheep, horse, duck, goat) %>%
+  filter(rowSums(is.na(.)) != ncol(.) - 1)
+
+only_live_df
+```
+
+There are `r english::english(nrow(only_live_df))` countries which have
+only *Meat Live Weight* prices for these animals (Cattle, Chicken, Pig,
+Sheep, Horse, Duck).
+
+And per animal these are
+
+## Only Live Weight Prices {.tabset}
+
+### Cattle
+
+```{r}
+filter(only_live_df, cattle == 1) |>
+  select(area)
+```
+
+There are `r sum(only_live_df$cattle == 1, na.rm = TRUE)` with only Live
+Weight Prices for Cattle.
+
+Most Noticeable Countries:
+
+-   Brazil
+-   Canada
+-   Ethiopia
+-   Ireland
+-   Italy
+-   Japan
+-   New Zealand
+-   USA
+
+### Sheep
+
+```{r}
+filter(only_live_df, sheep == 1) |>
+  select(area)
+```
+
+There are `r sum(only_live_df$sheep == 1, na.rm = TRUE)` with only live
+Weight Prices for Sheep.
+
+### Chicken
+
+```{r}
+filter(only_live_df, chicken == 1) |>
+  select(area)
+```
+
+There are `r sum(only_live_df$chicken == 1, na.rm = TRUE)` with only
+Live Weight Prices for Chickens.
+
+### Goat
+
+```{r}
+filter(only_live_df, goat == 1) |>
+  select(area)
+```
+
+There are `r sum(only_live_df$goat == 1, na.rm = TRUE)` with only Live
+Weight Prices for Goats.
+
+### Pig
+
+```{r}
+filter(only_live_df, pig == 1) |>
+  select(area)
+```
+
+There are `r sum(only_meat_df$pig == 1, na.rm = TRUE)` with only Live
+Weight Prices for Pigs.
+
+# Conclusion
+
+<i> Due to the higher number of countries which only have local currency
+live weight prices available for the baseline period $2014-2016$,
+especially for Cattle (i.e., Brazil, USA, Canada, ...). The current
+decision is to remain using the "Meat, Live Weight" element [@FAO2021a]
+(in concurrence with the approach stated in the [Goals](#goal) for this
+analysis) for the global analysis, while documenting and commenting on
+the lack of available data which produces adds extra uncertainty to the
+final number produced. </i>
+
+# References

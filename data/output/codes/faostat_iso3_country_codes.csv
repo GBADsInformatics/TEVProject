@@ -1,0 +1,213 @@
+country_code,country,m49_code,iso2_code,iso3_code,start_year,end_year
+2,Afghanistan,004,AF,AFG,NA,NA
+3,Albania,008,AL,ALB,NA,NA
+4,Algeria,012,DZ,DZA,NA,NA
+5,American Samoa,016,AS,ASM,NA,NA
+6,Andorra,020,AD,AND,NA,NA
+7,Angola,024,AO,AGO,NA,NA
+258,Anguilla,660,AI,AIA,NA,NA
+8,Antigua and Barbuda,028,AG,ATG,NA,NA
+9,Argentina,032,AR,ARG,NA,NA
+1,Armenia,051,AM,ARM,1992,NA
+22,Aruba,533,AW,ABW,NA,NA
+10,Australia,036,AU,AUS,NA,NA
+11,Austria,040,AT,AUT,NA,NA
+52,Azerbaijan,031,AZ,AZE,1992,NA
+12,Bahamas,044,BS,BHS,NA,NA
+13,Bahrain,048,BH,BHR,NA,NA
+16,Bangladesh,050,BD,BGD,NA,NA
+14,Barbados,052,BB,BRB,NA,NA
+57,Belarus,112,BY,BLR,1992,NA
+255,Belgium,056,BE,BEL,2000,NA
+15,Belgium-Luxembourg,058,NA,NA,NA,1999
+23,Belize,084,BZ,BLZ,NA,NA
+53,Benin,204,BJ,BEN,NA,NA
+17,Bermuda,060,BM,BMU,NA,NA
+18,Bhutan,064,BT,BTN,NA,NA
+19,Bolivia (Plurinational State of),068,BO,BOL,NA,NA
+80,Bosnia and Herzegovina,070,BA,BIH,1992,NA
+31,Bouvet Island,074,BV,BVT,NA,NA
+21,Brazil,076,BR,BRA,NA,NA
+26,Brunei Darussalam,096,BN,BRN,NA,NA
+27,Bulgaria,100,BG,BGR,NA,NA
+233,Burkina Faso,854,BF,BFA,NA,NA
+29,Burundi,108,BI,BDI,NA,NA
+35,Cabo Verde,132,CV,CPV,NA,NA
+115,Cambodia,116,KH,KHM,NA,NA
+32,Cameroon,120,CM,CMR,NA,NA
+33,Canada,124,CA,CAN,NA,NA
+37,Central African Republic,140,CF,CAF,NA,NA
+39,Chad,148,TD,TCD,NA,NA
+40,Chile,152,CL,CHL,NA,NA
+96,"China, Hong Kong SAR",344,HK,HKG,NA,NA
+128,"China, Macao SAR",446,MO,MAC,NA,NA
+41,"China, mainland",156,CN,CHN,NA,NA
+214,"China, Taiwan Province of",158,TW,TWN,NA,NA
+44,Colombia,170,CO,COL,NA,NA
+45,Comoros,174,KM,COM,NA,NA
+46,Congo,178,CG,COG,NA,NA
+48,Costa Rica,188,CR,CRI,NA,NA
+107,Côte d'Ivoire,384,CI,CIV,NA,NA
+98,Croatia,191,HR,HRV,1992,NA
+49,Cuba,192,CU,CUB,NA,NA
+279,Curaçao,531,NA,CUW,2011,NA
+50,Cyprus,196,CY,CYP,NA,NA
+167,Czechia,203,CZ,CZE,1993,NA
+116,Democratic People's Republic of Korea,408,KP,PRK,NA,NA
+250,Democratic Republic of the Congo,180,CD,COD,NA,NA
+54,Denmark,208,DK,DNK,NA,NA
+72,Djibouti,262,DJ,DJI,NA,NA
+55,Dominica,212,DM,DMA,NA,NA
+56,Dominican Republic,214,DO,DOM,NA,NA
+58,Ecuador,218,EC,ECU,NA,NA
+59,Egypt,818,EG,EGY,NA,NA
+60,El Salvador,222,SV,SLV,NA,NA
+61,Equatorial Guinea,226,GQ,GNQ,NA,NA
+178,Eritrea,232,ER,ERI,1993,NA
+63,Estonia,233,EE,EST,1992,NA
+209,Eswatini,748,SZ,SWZ,NA,NA
+238,Ethiopia,231,ET,ETH,1993,NA
+64,Faroe Islands,234,FO,FRO,NA,NA
+66,Fiji,242,FJ,FJI,NA,NA
+67,Finland,246,FI,FIN,NA,NA
+68,France,250,FR,FRA,NA,NA
+69,French Guyana,254,GF,GUF,NA,NA
+70,French Polynesia,258,PF,PYF,NA,NA
+74,Gabon,266,GA,GAB,NA,NA
+75,Gambia,270,GM,GMB,NA,NA
+73,Georgia,268,GE,GEO,1992,NA
+79,Germany,276,DE,DEU,NA,NA
+81,Ghana,288,GH,GHA,NA,NA
+84,Greece,300,GR,GRC,NA,NA
+85,Greenland,304,GL,GRL,NA,NA
+86,Grenada,308,GD,GRD,NA,NA
+87,Guadeloupe,312,GP,GLP,NA,NA
+88,Guam,316,GU,GUM,NA,NA
+89,Guatemala,320,GT,GTM,NA,NA
+90,Guinea,324,GN,GIN,NA,NA
+175,Guinea-Bissau,624,GW,GNB,NA,NA
+91,Guyana,328,GY,GUY,NA,NA
+93,Haiti,332,HT,HTI,NA,NA
+95,Honduras,340,HN,HND,NA,NA
+97,Hungary,348,HU,HUN,NA,NA
+99,Iceland,352,IS,ISL,NA,NA
+100,India,356,IN,IND,NA,NA
+101,Indonesia,360,ID,IDN,NA,NA
+102,Iran (Islamic Republic of),364,IR,IRN,NA,NA
+103,Iraq,368,IQ,IRQ,NA,NA
+104,Ireland,372,IE,IRL,NA,NA
+105,Israel,376,IL,ISR,NA,NA
+106,Italy,380,IT,ITA,NA,NA
+109,Jamaica,388,JM,JAM,NA,NA
+110,Japan,392,JP,JPN,NA,NA
+112,Jordan,400,JO,JOR,NA,NA
+108,Kazakhstan,398,KZ,KAZ,1992,NA
+114,Kenya,404,KE,KEN,NA,NA
+83,Kiribati,296,KI,KIR,NA,NA
+118,Kuwait,414,KW,KWT,NA,NA
+113,Kyrgyzstan,417,KG,KGZ,1992,NA
+120,Lao People's Democratic Republic,418,LA,LAO,NA,NA
+119,Latvia,428,LV,LVA,1992,NA
+121,Lebanon,422,LB,LBN,NA,NA
+122,Lesotho,426,LS,LSO,NA,NA
+123,Liberia,430,LR,LBR,NA,NA
+124,Libya,434,LY,LBY,NA,NA
+125,Liechtenstein,438,LI,LIE,NA,NA
+126,Lithuania,440,LT,LTU,1992,NA
+256,Luxembourg,442,LU,LUX,2000,NA
+129,Madagascar,450,MG,MDG,NA,NA
+130,Malawi,454,MW,MWI,NA,NA
+131,Malaysia,458,MY,MYS,NA,NA
+132,Maldives,462,MV,MDV,NA,NA
+133,Mali,466,ML,MLI,NA,NA
+134,Malta,470,MT,MLT,NA,NA
+127,Marshall Islands,584,MH,MHL,1991,NA
+136,Mauritania,478,MR,MRT,NA,NA
+137,Mauritius,480,MU,MUS,NA,NA
+138,Mexico,484,MX,MEX,NA,NA
+145,Micronesia (Federated States of),583,FM,FSM,1991,NA
+140,Monaco,492,MC,MCO,NA,NA
+141,Mongolia,496,MN,MNG,NA,NA
+273,Montenegro,499,ME,MNE,2006,NA
+143,Morocco,504,MA,MAR,NA,NA
+144,Mozambique,508,MZ,MOZ,NA,NA
+28,Myanmar,104,MM,MMR,NA,NA
+148,Nauru,520,NR,NRU,NA,NA
+149,Nepal,524,NP,NPL,NA,NA
+150,Netherlands,528,NL,NLD,NA,NA
+153,New Caledonia,540,NC,NCL,NA,NA
+156,New Zealand,554,NZ,NZL,NA,NA
+157,Nicaragua,558,NI,NIC,NA,NA
+158,Niger,562,NE,NER,NA,NA
+159,Nigeria,566,NG,NGA,NA,NA
+160,Niue,570,NU,NIU,NA,NA
+154,North Macedonia,807,MK,MKD,1992,NA
+162,Norway,578,NO,NOR,NA,NA
+221,Oman,512,OM,OMN,NA,NA
+165,Pakistan,586,PK,PAK,NA,NA
+180,Palau,585,PW,PLW,1991,NA
+166,Panama,591,PA,PAN,NA,NA
+168,Papua New Guinea,598,PG,PNG,NA,NA
+169,Paraguay,600,PY,PRY,NA,NA
+170,Peru,604,PE,PER,NA,NA
+171,Philippines,608,PH,PHL,NA,NA
+173,Poland,616,PL,POL,NA,NA
+174,Portugal,620,PT,PRT,NA,NA
+179,Qatar,634,QA,QAT,NA,NA
+117,Republic of Korea,410,KR,KOR,NA,NA
+146,Republic of Moldova,498,MD,MDA,1992,NA
+182,Réunion,638,RE,REU,NA,NA
+183,Romania,642,RO,ROU,NA,NA
+185,Russian Federation,643,RU,RUS,1992,NA
+184,Rwanda,646,RW,RWA,NA,NA
+188,Saint Kitts and Nevis,659,KN,KNA,NA,NA
+189,Saint Lucia,662,LC,LCA,NA,NA
+191,Saint Vincent and the Grenadines,670,VC,VCT,NA,NA
+244,Samoa,882,WS,WSM,NA,NA
+192,San Marino,674,SM,SMR,NA,NA
+193,Sao Tome and Principe,678,ST,STP,NA,NA
+194,Saudi Arabia,682,SA,SAU,NA,NA
+195,Senegal,686,SN,SEN,NA,NA
+272,Serbia,688,RS,SRB,2006,NA
+186,Serbia and Montenegro,891,CS,SCG,1992,2005
+197,Sierra Leone,694,SL,SLE,NA,NA
+200,Singapore,702,SG,SGP,NA,NA
+199,Slovakia,703,SK,SVK,1993,NA
+198,Slovenia,705,SI,SVN,1992,NA
+25,Solomon Islands,090,SB,SLB,NA,NA
+201,Somalia,706,SO,SOM,NA,NA
+202,South Africa,710,ZA,ZAF,NA,NA
+277,South Sudan,728,SS,SSD,2012,NA
+203,Spain,724,ES,ESP,NA,NA
+38,Sri Lanka,144,LK,LKA,NA,NA
+276,Sudan,729,SD,SDN,2012,NA
+206,Sudan (former),736,NA,NA,NA,2011
+207,Suriname,740,SR,SUR,NA,NA
+210,Sweden,752,SE,SWE,NA,NA
+211,Switzerland,756,CH,CHE,NA,NA
+212,Syrian Arab Republic,760,SY,SYR,NA,NA
+208,Tajikistan,762,TJ,TJK,1992,NA
+216,Thailand,764,TH,THA,NA,NA
+176,Timor-Leste,626,TL,TLS,NA,NA
+217,Togo,768,TG,TGO,NA,NA
+218,Tokelau,772,TK,TKL,NA,NA
+219,Tonga,776,TO,TON,NA,NA
+220,Trinidad and Tobago,780,TT,TTO,NA,NA
+222,Tunisia,788,TN,TUN,NA,NA
+223,Turkey,792,TR,TUR,NA,NA
+213,Turkmenistan,795,TM,TKM,1992,NA
+227,Tuvalu,798,TV,TUV,NA,NA
+226,Uganda,800,UG,UGA,NA,NA
+230,Ukraine,804,UA,UKR,1992,NA
+225,United Arab Emirates,784,AE,ARE,NA,NA
+229,United Kingdom of Great Britain and Northern Ireland,826,GB,GBR,NA,NA
+215,United Republic of Tanzania,834,TZ,TZA,NA,NA
+231,United States of America,840,US,USA,NA,NA
+234,Uruguay,858,UY,URY,NA,NA
+235,Uzbekistan,860,UZ,UZB,1992,NA
+155,Vanuatu,548,VU,VUT,NA,NA
+236,Venezuela (Bolivarian Republic of),862,VE,VEN,NA,NA
+237,Viet Nam,704,VN,VNM,NA,NA
+249,Yemen,887,YE,YEM,NA,NA
+251,Zambia,894,ZM,ZMB,NA,NA
+181,Zimbabwe,716,ZW,ZWE,NA,NA

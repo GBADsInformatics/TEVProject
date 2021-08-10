@@ -1,0 +1,347 @@
+---
+title: "GBADS Livestock Value Estimation Supplementary Notes"
+author: PPSTheme
+output: 
+    pdf_document:
+        toc: true
+        df_print: kable
+vignette: >
+  %\VignetteIndexEntry{Documentation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  
+bibliography: ../references.bib
+csl: "../cambridge-university-press-numeric.csl"
+link-citations: true
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  echo = FALSE,
+  comment = "#>"
+)
+
+knitr::opts_knit$set(
+  root.dir = here::here(".")
+)
+
+suppressPackageStartupMessages({
+  library(DiagrammeR) # For the flow diagrams
+})
+```
+
+
+```{r config}
+config <- config::get()
+```
+
+
+```{r print-table}
+print_table <- function(data, caption) {
+  data |>
+    knitr::kable(caption = caption) |>
+    kableExtra::kable_styling(font_size = 6)
+}
+```
+
+\newpage
+
+
+
+# Calculations 
+
+
+The following section details the process of obtaining both asset value and 
+output value estimates for terrestrial livestock and aquaculture. 
+
+### Livestock 
+
+
+
+\newpage
+
+## Asset Value Calculation
+
+
+The following set of equations outlines the terms and calculations used to
+obtain the livestock asset value for a single livestock animal type in a single
+country for one year during the observational period.
+
+
+$$
+\begin{aligned}
+    \text{Carcass Yield} &= \text{No. Slaughtered (Head)} \times \text{No. Slaughtered (Tonnes)} \\
+    \text{Average Live Body Weight}&= \text{Carcass Yield} \times \text{Carcass Percent}^{-1} \\
+    \text{Asset Value} &= \text{Price per Tonne} \times \text{Average Live Bodyweight (tonnes)} \times \text{Livestock Population}
+\end{aligned}
+$$
+
+The following flow chart describes the process of calculating the asset value 
+for a single livestock animal type in a single country for one year 
+during the observational period. 
+
+
+
+```{r, fig.cap="Livestock Asset Value Calculation Flow Diagram"}
+mermaid("graph TB;
+        A[Number Livestock Slaughtered]-->C;
+        B[Quanitity Livestock Slaughtered]-->C;
+        C[Tonnes/Head = Carcass Yield] -->E;
+        D[Carcass Percentage]-->E;
+        E[Yield/Carcass Percentage = Average Live Body Weight]-->G;
+        F[Liveweight Price Per Tonne]-->G;
+        G[Liveweight Price Per Tonne/Average Live Body Weight = Price Per Live Animal]-->I;
+        H[Livestock Population]-->I;
+        I[Asset Value];
+        ")
+```
+
+\newpage
+
+## Constant $2014-2016$ USD Calculations 
+
+To convert currencies into constant $2014-2016$ USD the following procedure is used. 
+
+1. Obtain the weighted mean price for each commodity in Local Currency units
+for the base period of $2014-2016$. Where the weights applied to each of these
+prices are the annual production value when being used to calculate livestock or
+Aquaculture outputs in constant USD, or a countries amount of stock when being
+used to calculate asset values. In the case where a price is missing for one of
+these three years, the remaining available years are used without imputation of
+an additional value.
+
+2. Determine the weighted average annual exchange rate to *USD* from *LCU*  
+using the same weighting scheme as mentioned in the previous point. 
+
+3. Convert the $2014-2016$ Weighted average prices in Local Currency Units to 
+*USD* using the weighted average exchange rate derived in the previous step. 
+
+The flow of this calculation is outlined in the following figure  
+
+```{r constant-usd-figure, fig.cap="Constant 2014-2016 USD Calculation Flow Diagram"}
+mermaid("graph LR;
+        A[2014-2016 Commodity Producer Price  in LCU]-->C;
+        B[Livestock Commodity Quantity/Livestock Head]-->C;
+        C[Weighted mean 2014-2016 Producer Price in SLC] -->E;
+        D[LCU to USD 2014-2016 Average Annual Exchange Rate] -->G;
+        F[Livestock Commodity Quantity/Livestock Head]-->G;
+        G[Weighted Average Annual LCU to USD 2014-2016 Exchange Rate]-->E;
+        E[Constant 2014-2016 USD Value per Tonne]
+")
+```
+
+
+Or to show this in a more mathematical manner, let
+$\mathbb{Y} = \{2014, 2015, 2016\}$ be the base years used in the constant dollars 
+calculation.
+
+If we then let 
+
+$$
+x_i  \qquad i \in \mathbb{Y}
+$$
+
+be the number of livestock or quantity of livestock output produced in the base
+period and $P_i,   \ i \in \mathbb{Y}$ be the *Producer Price* in standard local
+currency in that year and $E_i \ i \in \mathbb{Y}$ be the mean average local
+currency unit to USD  exchange rate as reported by the World Bank *PA.NUS.ATLS*
+or *PA.NUS.FCRF*.
+
+The value in constant *USD* is then 
+
+$$
+\left(\sum_{i \in \mathbb{Y}} P_ix_i \right) \left(\sum_{i \in \mathbb{Y}}x_iE_i\right) \qquad = \qquad \text{Constant 2014-2016 USD Value Per Tonne}
+$$
+
+
+This procedure was used to match the process used by the FAO in creating the
+Producer Price Index for each commodity item. A link to the document in which
+this procedure in described is available
+[here](https://fenixservices.fao.org/faostat/static/documents/PP/PP_e.pdf)
+(Valid Link as of 25-07-2022).
+
+## Uncertainty 
+
+As is stated in the following datasets metadata files on the main 
+sources of error. 
+
+* [FAOSTAT QCL](https://www.fao.org/faostat/en/#data/QCL/metadata)
+* [FAOSTAT PP](https://www.fao.org/faostat/en/#data/PP/metadata)
+* [FAOSTAT QV](https://www.fao.org/faostat/en/#data/QV/metadata)
+
+
+> "It is not possible to assess the overall accuracy of the dataset, as the
+> source data is largely collected by member countries. For data that is imputed
+> (including for non-reporting countries or for products for which countries do
+> not collect official data), the accuracy of the imputations is unknown. However,
+> imputation processes are assessed and adjusted on a regular basis."
+>
+> Overall Accuracy (QCL, QV) (2022-08-08)
+
+
+
+> "No information is available regarding sampling error. In the EU, regulations
+> mandate that the coefficient of variation shall not exceed 3% for the area of
+> cultivation for main crops. For non-EU countries, the coefficient of variation
+> may be significantly larger. For further information, see country metadata (if
+> available)."
+> 
+> Sampling Error (QCL, QV) (2022-08-08)
+
+
+> "No information is available regarding the magnitude of non-sampling errors.
+> Non-sampling errors may occur as a result of measurement errors, caused by a
+> lack of harmonization in statistical methods. For instance, significant
+> measurement errors may be present in instances where FAO concepts do not fit
+> with national concepts."
+> 
+> Non-sampling error  (QCL, QV) (2022-08-08)
+
+This makes any calculation of the uncertainty in these estimates difficult, due
+to the poor and inconsistent quality of the underlying datasets due to
+differences in countries reporting periods, methodologies and interpretation of
+different commodities classifications.
+
+\newpage
+ 
+# Codes 
+
+## Aquaculture
+
+The main unit that is used to subset the data is the custom grouping 
+
+> "Fish, crustaceans and molluscs, etc.."
+
+which is what is used in the FAOSTAT yearbook. This subsets the species used to
+the main commercial products and excluded production figures for aquatic plants,
+pearls and mother-of-pearl. This subsetting and grouping  is outlined in the
+Global Aquaculture Production database metadata at `Aqua_E.html`, other notes on
+the data are also given in `NOTES_AQUACULTURE_COUNTRY_EN.html`[@FAO2021b].
+ 
+\newpage
+ 
+ 
+## Crops 
+
+Crop mappings from 
+
+The following table shows the crop codes used [@FAO2021c]. 
+
+```{r}
+readRDS(here::here("data", "codes", "faostat", "FAOSTAT_CPC_cropItemCodes.Rds")) |>
+  print_table(caption = "FAOSTAT to CPC Crop Codes and Groupings")
+```
+
+\newpage
+
+
+
+
+
+## Value of Production
+
+The following table shows the FAOSTAT Value of Agricultural Production [@FAO2021] 
+item codes used. 
+
+- For this paper project only the `Non-Indigenous` value of production items 
+were used. 
+
+
+```{r}
+readRDS(
+  here::here(config$data$codes$faostat$dir, "FAOSTAT_VOP_Items_NonIndigenous_Codes.rds")
+) |>
+  print_table(caption = "FAOSTAT Value of Production Livestock Output Item Codes Used")
+```
+
+
+\newpage
+
+## Producer Prices Meat Live Weight
+
+The following table shows the "Meat, live weight <animal>" producer price 
+codes used in the FAOSTAT database. 
+
+
+```{r}
+readRDS(here::here(config$data$codes$faostat$dir, "FAOSTAT_Meat_Live_Weight_Codes.rds")) |>
+  dplyr::distinct(`Item Code`, .keep_all = TRUE) |>
+  print_table(caption = "FAOSTAT Producer Prices Live Weight Item Codes used")
+```
+
+\newpage
+
+
+## FAOSTAT Livestock Items 
+
+The following table displays the Livestock Species item codes which are 
+used in this analysis. These codes are used to produce the asset value for each 
+species. The number of species may of course differ for each country. 
+
+```{r}
+readRDS(
+  here::here(config$data$codes$faostat$dir, "FAOSTAT_Livestock_Codes.rds")
+) |>
+  dplyr::filter(`Domain Code` == "QCL") |>
+  dplyr::distinct(Item, .keep_all = TRUE) |>
+  print_table(
+    caption = "FAOSTAT Production and Livestock Products Livestock (Stock) Item Codes Used"
+  )
+```
+
+
+
+
+## Country ISO3 Codes 
+
+The following table shows the ISO3 codes for regions which are included in this
+analysis, including the years in which the code designation applies.
+
+
+```{r}
+
+arrow::read_parquet(here::here(config$data$codes$faostat$country_codes$output_codes)) |>
+  dplyr::select(country, m49_code, iso3_code, start_year, end_year) |>
+  print_table(caption = "ISO3 Country Codes Included in this Analysis")
+```
+
+
+These codes are sourced directly from the following location 
+
+```{r, results='asis'}
+config$data$codes$faostat$country_codes$url
+```
+
+
+\newpage
+
+## Technical Conversion Factors 
+
+Technical conversion factors for animal body weights are derived directly from
+FAOSTAT production data, or using the values given in the in their technical
+conversion factors documentation [@faoTechnicalConversionFactors2012].
+
+
+*Note: There are inconsistencies in how different countries report body weights,
+with some reporting only sold animals, and others the average live body weight
+of their entire stock. The carcass percentage also varies per animal depending
+on what value is included in the output FAOSTAT Commodity tree.*
+
+In the cases where countries have missing values for different livestock types
+these values have been imputed using the regional median value for each of the
+live body weight, carcass weight and carcass percentage.
+
+The following table shows these a glimpse at these values once they are 
+
+
+```{r}
+arrow::read_parquet(
+  here::here(config$data$output$technical_conversion_factors_imputed)
+) |>
+  dplyr::glimpse()
+```
+
+
+
+# References

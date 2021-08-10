@@ -1,0 +1,239 @@
+---
+title: "Frequently Asked Questions"
+output:
+  html_document:
+    theme: cerulean
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+    fig_height: 6
+    fig_width: 10
+    fig_retina: 3
+    highlight: pygments
+    highlight_downlit: yes
+    code_folding: hide
+    number_sections: no
+    df_print: paged
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+knitr::opts_knit$set(
+  root.dir = here::here(".")
+)
+```
+
+```{r setup, include=FALSE}
+
+suppressPackageStartupMessages({
+  library(arrow)
+  library(dplyr)
+  library(tidyr)
+  library(LivestockValueGBADS)
+})
+
+
+# Project configuration
+config <- config::get()
+```
+
+
+# Introduction 
+
+This vignette meant to hold answers to any frequently asked questions. 
+
+
+# Does animal live body weight exceed output mass? 
+
+To answer this question we can break down the question into the following
+three different sub-questions. 
+
+
+## Does animal live body weight exceed output mass in the cases where we have a price value as a whole?
+
+*Specifically a price value in Constant 2014-2016 USD.*
+
+
+
+```{r}
+
+# Load in the livestock output files  and aggregate to
+# Live Body Weight
+livestock_value <- arrow::read_parquet(config$data$output$livestock_values)
+
+
+livestock_value |>
+  dplyr::select(
+    iso3_code,
+    item,
+    animal,
+    year,
+    tonnes,
+    gross_production_value_constant_2014_2016_thousand_us,
+    stock_value_constant_2014_2016_usd
+  ) |>
+  dplyr::filter(
+    # Filter observations in which a year is present
+    (item == "stock" & stock_value_constant_2014_2016_usd > 0) |
+      (item != "stock" & gross_production_value_constant_2014_2016_thousand_us > 0)
+  ) |>
+  dplyr::mutate(
+    item = ifelse(item == "stock", "live", "output")
+  ) |>
+  dplyr::group_by(
+    item, year
+  ) |>
+  dplyr::summarise(
+    tonnes = sum(tonnes, na.rm = TRUE)
+  ) |>
+  tidyr::spread(item, tonnes) |>
+  dplyr::mutate(
+    live_body_weight_exceeds_output = live > output,
+    ratio = live / output
+  ) |>
+  knitr::kable(
+    caption = "Does animal live body weight exceed output mass in the cases where we have a price value as a whole?",
+    col.names = c(
+      "Year",
+      "Live Animal Body Mass (Tonnes)",
+      "Animal Output Mass (Tonnes)",
+      "Does Body Mass Exceed Output Mass?",
+      "Live Mass to Output Mass Ratio"
+    )
+  )
+```
+
+For items in which we have a currently assigned value,
+output mass is approximately 2 times the live body weight mass. 
+
+*Note: this is partially due to missing values for live weight prices*
+
+## Does animal live body weight  exceed output mass in total? 
+
+*Note: in this instance we are comparing all live body weight and output values, 
+regardless if a value has been able to be attached to them.*
+
+```{r}
+
+
+livestock_value |>
+  dplyr::select(
+    iso3_code,
+    item,
+    animal,
+    year,
+    tonnes,
+    gross_production_value_constant_2014_2016_thousand_us,
+    stock_value_constant_2014_2016_usd
+  ) |>
+  dplyr::mutate(
+    item = ifelse(item == "stock", "live", "output")
+  ) |>
+  dplyr::group_by(
+    item, year
+  ) |>
+  dplyr::summarise(
+    tonnes = sum(tonnes, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  tidyr::drop_na(item) |>
+  tidyr::spread(item, tonnes) |>
+  dplyr::mutate(
+    live_body_weight_exceeds_output = live > output,
+    ratio = live / output
+  ) |>
+  knitr::kable(
+    caption = "Does animal live body weight exceed output mass in total?",
+    col.names = c(
+      "Year",
+      "Live Animal Body Mass (Tonnes)",
+      "Animal Output Mass (Tonnes)",
+      "Does Body Mass Exceed Output Mass?",
+      "Live Mass to Output Mass Ratio"
+    )
+  )
+```
+
+For the total value of output mass to live weight mass (with and without values), 
+the ratio of live mass to output mass goes from 0.9 in 1994, to 0.7 in 2018. 
+
+
+## Does animal live body weight exceed output mass for items in which we have a value for both items (within country and year)?
+
+*Note: in this instance we are comparing items in which we both have a stock value, 
+and output values for that particular animal.*
+
+```{r}
+
+livestock_value |>
+  dplyr::select(
+    iso3_code,
+    item,
+    animal,
+    year,
+    tonnes,
+    gross_production_value_constant_2014_2016_thousand_us,
+    stock_value_constant_2014_2016_usd
+  ) |>
+  tidyr::drop_na(tonnes) |>
+  dplyr::filter(
+    # Filter observations in which a year is present
+    (item == "stock" & stock_value_constant_2014_2016_usd > 0) |
+      (item != "stock" & gross_production_value_constant_2014_2016_thousand_us > 0)
+  ) |>
+  dplyr::mutate(
+    value = ifelse(item == "stock", stock_value_constant_2014_2016_usd, gross_production_value_constant_2014_2016_thousand_us)
+  ) |>
+  dplyr::select(
+    iso3_code, item, animal, year, tonnes, value
+  ) |>
+  dplyr::mutate(
+    item = ifelse(item == "stock", "live", "output")
+  ) |>
+  dplyr::group_by(iso3_code, year, item, animal) |>
+  dplyr::summarise_all(~ sum(.x, na.rm = TRUE)) |>
+  dplyr::ungroup() |>
+  dplyr::group_by(iso3_code, year, animal) |>
+  dplyr::mutate(
+    g_size = n()
+  ) |>
+  dplyr::ungroup() |>
+  dplyr::filter(g_size == 2) |>
+  dplyr::group_by(year, item) |>
+  dplyr::summarise(
+    tonnes = sum(tonnes, na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  tidyr::spread(item, tonnes) |>
+  dplyr::mutate(
+    live_body_weight_exceeds_output = live > output,
+    ratio = live / output
+  ) |>
+  knitr::kable(
+    caption = "Does animal live body weight exceed output mass for items in which we have a value for both items?",
+    col.names = c(
+      "Year",
+      "Live Animal Body Mass (Tonnes)",
+      "Animal Output Mass (Tonnes)",
+      "Does Body Mass Exceed Output Mass?",
+      "Live Mass to Output Mass Ratio"
+    )
+  )
+```
+
+For the items in which there is a value for both items, output mass is always
+greater than live animal body mass. The ratio of live mass to output mass goes
+from 0.86 in 1994, to 0.77 in 2018.
+
+
+
+## Caveats
+
+*Note: that as this uses live body weight at slaughter, it is an upper bound on
+the average live body weight,  as it is not adjusted for the age and breed
+structure present in each country.*
+
+*Note: the above results do not include Aquaculture.*

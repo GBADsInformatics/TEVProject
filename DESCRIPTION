@@ -1,0 +1,54 @@
+Package: LivestockValueGBADS
+Title: Calculating the Total Economic Value of Livestock
+Version: 0.0.0.9000
+Authors@R: 
+    c( 
+    person("Peggy", "Schrobback", , "peggy.schroback@csiro.au", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0003-0526-1659")), 
+           person("Gabriel", "Dennis", , "gabriel.dennis@csiro.au", role = c("aut", "cre"),
+    comment = c(ORCID = "0000-0002-8322-4266")))
+Description: The code in this packge attempts to calculate the total
+    economic value of livestock for the GBADS (Global Burden of Animal
+    Disease) program.
+License: CC BY 4.0
+Imports: 
+    argparse,
+    arrow,
+    assertr,
+    config,
+    countrycode,
+    dplyr,
+    forcats,
+    ggplot2,
+    ggpubr,
+    ggrepel,
+    ggtext,
+    glue,
+    here,
+    janitor,
+    jsonlite,
+    kableExtra,
+    latex2exp,
+    logging,
+    purrr,
+    readr,
+    readxl,
+    renv,
+    scales,
+    stringr,
+    tidyr
+Suggests: 
+    knitr,
+    rmarkdown,
+    spelling,
+    testthat (>= 3.0.0)
+VignetteBuilder: 
+    knitr
+Config/testthat/edition: 3
+Encoding: UTF-8
+Language: en-US
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.1
+Depends: 
+    R (>= 2.10)
+LazyData: true

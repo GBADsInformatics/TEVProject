@@ -1,0 +1,5 @@
+# Set the config location
+R_CONFIG_FILE=conf/config.yml
+
+RENV_CONFIG_SANDBOX_ENABLED = FALSE
+

@@ -1,0 +1,50 @@
+# R and RStudio files 
+*.Rproj
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+.Rprofile
+
+
+# Temporary data 
+*.zip
+*.xlsx
+
+# dirs
+reports/*
+notes/*
+
+# renv project library
+# only commit the renv.lock and renv/activate.R files
+renv/**/*
+
+# Directories that can be ignored
+report/*
+
+# Ignore source data
+# This data is backed up locally on CSIRO Bowen Storage 
+data/source/*
+
+# Any binary word doc files
+*.docx
+
+# Archived data files 
+**/**archive**
+
+# duplicated figures 
+**/**updated**
+
+# Org files 
+**.org
+inst/doc
+docs/*
+!docs/*.Rmd
+!docs/*.rmd
+*.pdf
+*.pptx
+*.tex
+*.log
+*.bbl
+*.csl
+*.html
